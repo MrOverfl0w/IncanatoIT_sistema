@@ -1997,6 +1997,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      categoria_id: 0,
       nombre: '',
       descripcion: '',
       arrayCategoria: [],
@@ -2032,6 +2033,23 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
+    actualizarCategoria: function actualizarCategoria() {
+      if (this.validarCategoria()) {
+        return;
+      }
+
+      var me = this;
+      axios.put('/categoria/actualizar', {
+        'nombre': this.nombre,
+        'descripcion': this.descripcion,
+        'id': this.categoria_id
+      }).then(function (response) {
+        me.cerrarModal();
+        me.listarCategoria();
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
     validarCategoria: function validarCategoria() {
       this.errorCategoria = 0;
       this.errorMostrarMsjCategoria = [];
@@ -2060,6 +2078,13 @@ __webpack_require__.r(__webpack_exports__);
               break;
 
             case 'actualizar':
+              //console.log(data);
+              this.modal = 1;
+              this.tituloModal = 'Actualizar categoría';
+              this.tipoAccion = 2;
+              this.categoria_id = data['id'];
+              this.nombre = data['nombre'];
+              this.descripcion = data['descripcion'];
               break;
           }
 
@@ -38103,7 +38128,7 @@ var render = function() {
                           ])
                         : _c("div", [
                             _c("span", { staticClass: "badge badge-danger" }, [
-                              _vm._v("Desacivas")
+                              _vm._v("Desacivado")
                             ])
                           ])
                     ])
@@ -38306,7 +38331,11 @@ var render = function() {
                       {
                         staticClass: "btn btn-primary",
                         attrs: { type: "button" },
-                        on: { click: _vm.registrarCategoria }
+                        on: {
+                          click: function($event) {
+                            return _vm.registrarCategoria()
+                          }
+                        }
                       },
                       [_vm._v("Guardar")]
                     )
@@ -38317,7 +38346,12 @@ var render = function() {
                       "button",
                       {
                         staticClass: "btn btn-primary",
-                        attrs: { type: "button" }
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            return _vm.actualizarCategoria()
+                          }
+                        }
                       },
                       [_vm._v("Actualizar")]
                     )
